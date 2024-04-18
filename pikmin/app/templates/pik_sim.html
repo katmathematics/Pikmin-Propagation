@@ -1,0 +1,27 @@
+<html> 
+  <head> 
+    
+  </head> 
+
+  <body> 
+     <h1>Pikmin Simulation</h1>
+     <form method="POST">
+        <input type="submit" name="add_node" value="Add Node">
+        <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
+        <input type="submit" name="init_pik" value="Initialize Pikmin">
+        <input id="number" type="number" name="input_size" value="1" min="1" max="30" />
+        <input type="submit" name="init_to_cycle" value="Load a Cycle">
+        <div>
+        <h3>Provide Instructions</h3>
+        <select class="form-control" name=pikmin_agent_selector>
+         {% for agent in pikmin_agents %}
+            <option name="pik_select" value="{{ agent }}">{{ agent }}</option>
+         {% endfor %}
+        </select>
+        <input id="number" type="number" name="input_pik_move" value="0" min="0" max={{graph_size}} />
+        </div>
+        <input type="submit" name="add_instruction" value="Move Pikmin">
+    </form>
+      {% include 'pik_graph.html' %}
+  </body> 
+</html>
