@@ -1,9 +1,10 @@
 from pyvis.network import Network
 
-def add_node():
-    cur_len = len(net.get_nodes())
-    net.add_nodes([str(cur_len+1)],color=['#222222'])
-    net.save_graph("app/templates/pik_graph.html")
+def run_automatic():
+    global net
+    for vertex in net.get_nodes():
+        # Do something
+        print(vertex)
 
 def color_node(node_idx):
     global net
@@ -59,6 +60,18 @@ def move_pik(cur_pik, move_loc):
     
     net.save_graph("app/templates/pik_graph.html")   
 
+def load_path(n):
+    global net
+    net = Network()
+    net.add_nodes(range(n))
+    for node_idx in range(n):
+        net.nodes[node_idx]['color'] = '#f7f7f5'
+        net.nodes[node_idx]['title'] = str(node_idx+1)
+        if node_idx > 0:
+            net.add_edge((node_idx-1),node_idx)
+    net.save_graph("app/templates/pik_graph.html")    
+    return n
+
 def load_cycle(n):
     global net
     net = Network()
@@ -68,6 +81,48 @@ def load_cycle(n):
         net.nodes[node_idx]['title'] = str(node_idx+1)
         if n > 1:
             net.add_edge(node_idx%n,(node_idx+1)%n)
+    net.save_graph("app/templates/pik_graph.html")    
+    return n
+
+def load_star(n):
+    global net
+    net = Network()
+    net.add_nodes(range(n))
+    for node_idx in range(n):
+        net.nodes[node_idx]['color'] = '#f7f7f5'
+        net.nodes[node_idx]['title'] = str(node_idx+1)
+        if node_idx > 0:
+            net.add_edge(0,node_idx)
+    net.save_graph("app/templates/pik_graph.html")    
+    return n
+
+def load_wheel(n):
+    global net
+    net = Network()
+    net.add_nodes(range(n))
+    for node_idx in range(n):
+        net.nodes[node_idx]['color'] = '#f7f7f5'
+        net.nodes[node_idx]['title'] = str(node_idx+1)
+        if node_idx > 0:
+            net.add_edge(0,node_idx)
+        if n > 2:
+            if ((node_idx+1)%n) == 0:
+                net.add_edge(node_idx%n,1)
+            else: 
+                net.add_edge(node_idx%n,(node_idx+1)%n)
+    net.save_graph("app/templates/pik_graph.html")    
+    return n
+
+def load_complete(n):
+    global net
+    net = Network()
+    net.add_nodes(range(n))
+    for node_idx in range(n):
+        net.nodes[node_idx]['color'] = '#f7f7f5'
+        net.nodes[node_idx]['title'] = str(node_idx+1)
+        for node_idx_secondary in net.get_nodes():
+            if node_idx_secondary != node_idx:
+                net.add_edge(node_idx,node_idx_secondary)
     net.save_graph("app/templates/pik_graph.html")    
     return n
 
