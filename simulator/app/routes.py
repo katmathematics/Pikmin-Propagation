@@ -9,13 +9,16 @@ from app import graphs
 def index():
     net = graphs.fetch_net()
     pik_pop = []
-
     
     if not net:
         graphs.init_net()
         node_count = 0
+        turn_number = 0
+        pik_pop = ['']
     else:
         node_count = graphs.fetch_size()
+        turn_number = graphs.fetch_turn()
+        pik_pop = graphs.fetch_pik_pop()
 
 
     if request.method == "POST":
@@ -34,6 +37,7 @@ def index():
         init_pik = request.form.get('init_pik', None)
         init_graph = request.form.get('init_graph', None)
         run_automatic = request.form.get('run_automatic', None)
+        execute_turn = request.form.get('execute_turn', None)
 
         if run_automatic:
             graphs.run_automatic()
@@ -53,13 +57,15 @@ def index():
                 graphs.load_complete(int(size))
 
             node_count = graphs.fetch_size()   
+        elif execute_turn:
+            turn_number = graphs.increment_turn()
+            pik_pop = graphs.fetch_pik_pop()
 
         # Pikmin Movement
-   
         default_move_pos = ''
         default_pik = ""
         cur_pik = request.form.get("pik_select", default_pik)
         move_loc = request.form.get("input_pik_move", default_move_pos)
         #graphs.move_pik(cur_pik,int(move_loc))
 
-    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents = pik_pop)
+    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents = pik_pop, graph_vertices=range(node_count), turn_number=turn_number)

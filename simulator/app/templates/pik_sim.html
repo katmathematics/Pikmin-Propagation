@@ -35,15 +35,30 @@
          </div>
          <br>
          <div>
-            <h3>Provide Instructions</h3>
-            <select class="form-control" name=pikmin_agent_selector>
-            {% for agent in pikmin_agents %}
-               <option name="pik_select" value="{{ agent }}">{{ agent }}</option>
-            {% endfor %}
-            </select>
-            <input id="number" type="number" name="input_pik_move" value="0" min="0" max={{graph_size}} />
+            <h2>Current Game State: </h2>
+            <h4>Turn: {{ turn_number }}</h4>
          </div>
-         <input type="submit" name="add_instruction" value="Move Pikmin">
+         <div>
+            {% if pikmin_agents != [''] %}
+            <h3>Provide Instructions</h3>
+            {% for agent in pikmin_agents %}
+               {{ agent }}: Move to 
+                  <select name="pikmin_move_selector" value=1>
+                  {% for vertex in graph_vertices%}
+                     <option value={{vertex}} SELECTED>{{vertex}}</option>
+                  {% endfor %}
+                  </select>, then color
+                  <select name="pikmin_color_selector">
+                     <option value="red">Red</option>
+                     <option value="blue">Blue</option>
+                     <option value="null">Nothing</option>
+                  </select> 
+                  <input type="hidden" value={{agent}} id="executor_pikmin">
+            {% endfor %}
+         </div>
+         <input type="hidden" value={{turn_number}} id="turn_tracker">
+         <input type="submit" name="execute_turn" value="Execute Turn">
+         {% endif %}
       </form>
       {% include 'pik_graph.html' %}
   </body> 

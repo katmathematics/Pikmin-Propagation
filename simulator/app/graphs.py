@@ -32,8 +32,13 @@ def load_n_node(n):
 
 def init_pik(init_idx):
     global net
+    global turn_count
+
+    turn_count = 0
+
     if init_idx != 0:
         init_idx = init_idx - 1
+
     # Clear out the labels of everything in the graph
     for node_idx in range(len(net.get_nodes())):
         net.nodes[node_idx]['label'] = ''
@@ -43,8 +48,9 @@ def init_pik(init_idx):
     
     net.save_graph("app/templates/pik_graph.html")   
 
-    print(net.get_node(node_idx)["label"])
-    return([net.get_node(node_idx)["label"]])
+    print(net.get_node(init_idx)["label"])
+    set_pik_pop(net.get_node(init_idx)["label"])
+    return([net.get_node(init_idx)["label"]])
     #net.nodes[node_idx]['color'] = '#0b22b8'
 
 def move_pik(cur_pik, move_loc):
@@ -126,9 +132,37 @@ def load_complete(n):
     net.save_graph("app/templates/pik_graph.html")    
     return n
 
+def set_turn(turn):
+    global turn_count
+    turn_count += turn
+    return turn_count
+
+def increment_turn():
+    global turn_count
+    turn_count += 1
+    return turn_count
+
+def set_pik_pop(new_pik_pop):
+    global pik_pop
+    pik_pop = new_pik_pop
+    return pik_pop
+
+def fetch_pik_pop():
+    try:
+        return pik_pop
+    except:
+        return ['']
+    
+
 def fetch_size():
     try:
         return len(net.get_nodes())
+    except:
+        return 0
+    
+def fetch_turn():
+    try:
+        return turn_count
     except:
         return 0
 
