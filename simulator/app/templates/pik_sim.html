@@ -39,22 +39,33 @@
          {% endif %}
          <br>
          <div>
-            <h2>Current Game State: </h2>
-            <div style="text-indent:50px;">
-               <h4>Turn: {{ turn_number }}</h4>
-               <h4># of Verticies Colored Red: {{ red_count }}</h4>
-               <h4>Vertices Colored: {{ colored_count }} / {{ graph_size }}</h4>
-               <h4>Current Support Score: {{ red_count + turn_number}}</h4>
-            </div>
+            {% if not game_complete %}
+               <h2>Current Game State: </h2>
+               <div style="text-indent:50px;">
+                  <h4>Turn: {{ turn_number }}</h4>
+                  <h4># of Verticies Colored Red: {{ red_count }}</h4>
+                  <h4>Current Support Score: {{ red_count + turn_number}}</h4>
+                  <h4>Vertices Colored: {{ colored_count }} / {{ graph_size }}</h4>
+               </div>
+            {% endif %}
+            {% if game_complete %}
+               <h2>Final Game State: </h2>
+               <div style="text-indent:50px;">
+                  <h4>Turn: {{ turn_number }}</h4>
+                  <h4># of Verticies Colored Red: {{ red_count }}</h4>
+                  <h4>Final Support Score: {{ red_count + turn_number}}</h4>
+                  <h4>Vertices Colored: {{ colored_count }} / {{ graph_size }}</h4>
+               </div>
+            {% endif %}
          </div>
          <div>
-            {% if pikmin_agents_control != [] %}
+            {% if pikmin_agents_control != [] and not game_complete %}
             <h3>Provide Instructions</h3>
             {% for agent_controller in pikmin_agents_control %}
                {{ agent_controller[0] }}: Move to 
                   <select name={{agent_controller[1]}} value=1>
                   {% for vertex in graph_vertices%}
-                     <option value={{vertex}} SELECTED>{{vertex}}</option>
+                     <option value={{vertex+1}} SELECTED>{{vertex+1}}</option>
                   {% endfor %}
                   </select>, then color
                   <select name={{agent_controller[2]}}>
@@ -63,6 +74,7 @@
                      <option value="null">Nothing</option>
                   </select> 
                   <input type="hidden" value={{agent}} id="executor_pikmin">
+                  <br>
             {% endfor %}
          </div>
          <input type="hidden" value={{turn_number}} id="turn_tracker">
@@ -70,5 +82,15 @@
          {% endif %}
       </form>
       {% include 'pik_graph.html' %}
+      {% if instructions_history != [] %}
+      <div>
+         <h2>Turn History: </h2>
+            <ul>
+               {% for turn in instructions_history %}
+                  <li><b>Turn {{ turn[0] }}:</b> {% for pikmin_step in turn[1] %}&#40; {{ pikmin_step[0] }}, move to {{ pikmin_step[1] }}, then color {{ pikmin_step[2] }} &#41;</li>{% endfor %}
+               {% endfor %}
+            </ul>
+      </div>
+      {% endif %}
   </body> 
 </html>

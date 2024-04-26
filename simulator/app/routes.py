@@ -18,15 +18,19 @@ def index():
         active_pikmin_controller = []
         red_count = 0
         colored_count = 0
+        instructions_history = []
+        game_complete = False
     else:
         node_count = graphs.fetch_size()
         turn_number = graphs.fetch_turn()
         pik_pop = graphs.fetch_pik_pop()
-        #red_count = graphs.fetch_red_count()
-        #colored_count = graphs.fetch_colored_count()
+        instructions_history = graphs.fetch_instructions_history()
+        red_count = graphs.fetch_red_count()
+        colored_count = graphs.fetch_colored_count()
+        game_complete = graphs.check_completion()
 
         active_pikmin_controller = []
-        print("Check", pik_pop)
+        
         if pik_pop != ['']:
             for pikmin in pik_pop:
                 active_pikmin_controller.append([pikmin,"pikmin_move_selector_"+pikmin.replace(" ", "_"),"pikmin_color_selector_"+pikmin.replace(" ", "_")])
@@ -53,7 +57,7 @@ def index():
             pikmin_i_instructions.append(request.form.get(pik_movement_input_form[1]))
             pikmin_i_instructions.append(request.form.get(pik_movement_input_form[2]))
             pikmin_total_instructions.append(pikmin_i_instructions)
-        print("Pik Instructions: ", pikmin_total_instructions)
+        #print("Pik Instructions: ", pikmin_total_instructions)
 
 
         # Submit Buttons
@@ -81,8 +85,16 @@ def index():
 
             node_count = graphs.fetch_size()   
         elif execute_turn:
+            for pikmin_step in pikmin_total_instructions:
+                graphs.execute_step(pikmin_step)
+
+            instructions_history.append([turn_number,pikmin_total_instructions])
             turn_number = graphs.increment_turn()
             pik_pop = graphs.fetch_pik_pop()
+            red_count = graphs.fetch_red_count()
+            colored_count = graphs.fetch_colored_count()
+        game_complete = graphs.check_completion()
+        print("Game Complete? ", game_complete)
 
         # Pikmin Movement
         default_move_pos = ''
@@ -92,9 +104,12 @@ def index():
         #graphs.move_pik(cur_pik,int(move_loc))
 
         # Update the options again at the end of an input in the likely case that something changed
+        active_pikmin_controller = []
         if pik_pop != ['']:
             for pikmin in pik_pop:
                 active_pikmin_controller.append([pikmin,"pikmin_move_selector_"+pikmin.replace(" ", "_"),"pikmin_color_selector_"+pikmin.replace(" ", "_")])
         
-    print(active_pikmin_controller)
-    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents_control = active_pikmin_controller, graph_vertices=range(node_count), turn_number=turn_number, red_count = 0, colored_count = 0)
+        
+        
+
+    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents_control = active_pikmin_controller, graph_vertices=range(node_count), turn_number=turn_number, red_count = red_count, colored_count = colored_count, instructions_history=instructions_history, game_complete=game_complete)

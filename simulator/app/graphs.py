@@ -10,22 +10,60 @@ def init_globals():
     global turn_count
     global red_count
     global colored_count
+    global instructions_history
 
     turn_count = 0
     red_count = 0
     colored_count = 0
+    instructions_history = []
 
 def color_node(node_idx):
     global net
     net.nodes[node_idx]['color'] = '#0b22b8'
     net.save_graph("app/templates/pik_graph.html")
 
+def execute_step(step_instructions):
+    global net
+    global red_count
+    global colored_count
+    global pik_pop
+
+    all_nodes = net.get_nodes()
+    for node_idx in all_nodes:
+        # If any node is colored grey, the game is not complete
+        if step_instructions[0] in net.get_node(node_idx)['label'] :
+            net.get_node(node_idx)['label'] = net.get_node(node_idx)['label'].replace(step_instructions[0], '')
+            net.get_node(node_idx)['label'] = net.get_node(node_idx)['label'].strip()
+        
+        if net.nodes[node_idx]['title'] == str(step_instructions[1]):
+            new_node_idx = node_idx
+            net.get_node(new_node_idx)['label'] += " " + step_instructions[0]
+            net.get_node(new_node_idx)['label'] = net.get_node(new_node_idx)['label'].strip()
+    
+    if step_instructions[2] == "red":
+        #print("Ran red")
+        net.nodes[new_node_idx]['color'] = '#f61709'
+        new_pik_name = "Pik " + str(len(pik_pop)+1)
+        net.nodes[new_node_idx]['label'] += " " + new_pik_name
+        net.get_node(new_node_idx)['label'] = net.get_node(new_node_idx)['label'].strip()
+
+        pik_pop.append(new_pik_name)
+
+        red_count += 1
+        colored_count += 1
+    elif step_instructions[2] == "blue":
+        #print("Ran blue")
+        net.nodes[new_node_idx]['color'] = '#091df6'
+        colored_count += 1
+
+    net.save_graph("app/templates/pik_graph.html")
+
 def check_completion():
     all_nodes = net.get_nodes()
     complete = True
-    for node in all_nodes:
+    for node_idx in all_nodes:
         # If any node is colored grey, the game is not complete
-        if node['color'] == '#f7f7f5':
+        if net.nodes[node_idx]['color'] == '#f7f7f5':
             complete = False
     return complete
 
@@ -181,7 +219,12 @@ def fetch_colored_count():
     except:
         return 0
     
-
+def fetch_instructions_history():
+    try:
+        return instructions_history
+    except:
+        return []
+    
 def fetch_size():
     try:
         return len(net.get_nodes())
