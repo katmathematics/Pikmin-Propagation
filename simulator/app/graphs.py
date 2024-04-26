@@ -2,9 +2,45 @@ from pyvis.network import Network
 
 def run_automatic():
     global net
-    for vertex in net.get_nodes():
-        # Do something
-        print(vertex)
+
+    global turn_count
+    global red_count
+    global colored_count
+
+    # So. for the moment the easiest upper limit on turns is the size of the graph ^ size of the graph
+    # This covers the worst case where it is somehow optimal to route through the entire graph every single time
+    # you need to color a vertex
+    # But- we can add a termination tracker for red count, and when the game is finished, and we can front load
+    # so probably we'll never reach a strategy of size^size
+
+    best_strategy = []
+    best_support = float("inf")
+    best_strat_red = float("inf")
+    best_strat_turn = float("inf")
+
+    for starting_vertex in net.get_nodes():
+        current_strategy = []
+        turn_count = 0
+        red_count = 0
+        colored_count = 0
+        support = 0
+
+        # But rn this will only evaluate one strategy, we need to find a way to feed it all possible combos still
+        while not check_completion() and support < best_support:
+            current_strategy.append([])
+
+            support = turn_count + red_count
+
+        
+        net.neighbors(starting_vertex)
+
+    optimal_strategy = {
+        "support":best_support,
+        "turn":best_strat_turn,
+        "red":best_strat_red,
+        "strategy":best_strategy
+    }
+    return optimal_strategy
 
 def init_globals():
     global turn_count
