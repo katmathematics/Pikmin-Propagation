@@ -20,6 +20,7 @@ def index():
         colored_count = 0
         instructions_history = []
         game_complete = False
+        turn_validity_error = ""
     else:
         node_count = graphs.fetch_size()
         turn_number = graphs.fetch_turn()
@@ -28,6 +29,7 @@ def index():
         red_count = graphs.fetch_red_count()
         colored_count = graphs.fetch_colored_count()
         game_complete = graphs.check_completion()
+        turn_validity_error = ""
 
         active_pikmin_controller = []
         
@@ -85,14 +87,24 @@ def index():
 
             node_count = graphs.fetch_size()   
         elif execute_turn:
+            turn_valid = True
             for pikmin_step in pikmin_total_instructions:
-                graphs.execute_step(pikmin_step)
+                if not graphs.check_step(pikmin_step):
+                    turn_valid = False
 
-            instructions_history.append([turn_number,pikmin_total_instructions])
-            turn_number = graphs.increment_turn()
-            pik_pop = graphs.fetch_pik_pop()
-            red_count = graphs.fetch_red_count()
-            colored_count = graphs.fetch_colored_count()
+            # Only execute the turn if the turn was valid
+            if turn_valid:
+                turn_validity_error = ""
+                for pikmin_step in pikmin_total_instructions:
+                    graphs.execute_step(pikmin_step)
+
+                instructions_history.append([turn_number,pikmin_total_instructions])
+                turn_number = graphs.increment_turn()
+                pik_pop = graphs.fetch_pik_pop()
+                red_count = graphs.fetch_red_count()
+                colored_count = graphs.fetch_colored_count()
+            else:
+                turn_validity_error = "Error: At least one action selected was invalid. Please correct the instructions and try inputting the turn again"
         game_complete = graphs.check_completion()
         print("Game Complete? ", game_complete)
 
@@ -112,4 +124,4 @@ def index():
         
         
 
-    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents_control = active_pikmin_controller, graph_vertices=range(node_count), turn_number=turn_number, red_count = red_count, colored_count = colored_count, instructions_history=instructions_history, game_complete=game_complete)
+    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents_control = active_pikmin_controller, graph_vertices=range(node_count), turn_number=turn_number, red_count = red_count, colored_count = colored_count, instructions_history=instructions_history, game_complete=game_complete,turn_validity_error=turn_validity_error)

@@ -22,6 +22,28 @@ def color_node(node_idx):
     net.nodes[node_idx]['color'] = '#0b22b8'
     net.save_graph("app/templates/pik_graph.html")
 
+def check_step(step_instructions):
+    global net
+
+    # Assume valid until proven invalid
+    step_valid = True
+
+    all_nodes = net.get_nodes()
+    for node_idx in all_nodes:
+        if step_instructions[0] in net.get_node(node_idx)['label']:
+            print("Neighbors ", net.neighbors(node_idx))
+            print("Cur node ", node_idx)
+            print("Movement ", int(step_instructions[1])-1)
+            if (int(step_instructions[1])-1) not in net.neighbors(node_idx) and (int(step_instructions[1])-1) != node_idx: 
+                step_valid = False
+    
+    if step_instructions[2] == "red" or step_instructions[2] == "blue":
+        if net.nodes[(int(step_instructions[1])-1)]['color'] != '#f7f7f5':
+            step_valid = False
+
+    print(step_valid)
+    return step_valid
+
 def execute_step(step_instructions):
     global net
     global red_count
@@ -30,7 +52,6 @@ def execute_step(step_instructions):
 
     all_nodes = net.get_nodes()
     for node_idx in all_nodes:
-        # If any node is colored grey, the game is not complete
         if step_instructions[0] in net.get_node(node_idx)['label'] :
             net.get_node(node_idx)['label'] = net.get_node(node_idx)['label'].replace(step_instructions[0], '')
             net.get_node(node_idx)['label'] = net.get_node(node_idx)['label'].strip()

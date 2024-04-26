@@ -30,7 +30,7 @@
             </div>
          
             <div style="padding:6px;">
-               <h4>Run Manual Analysis (WIP)</h4>
+               <h4>Run Manual Analysis</h4>
                <label style="color:#141414;" for="input_pik_pos">Select Starting Vertex:</label>
                <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
                <input type="submit" name="init_pik" value="Initialize Pikmin">
@@ -79,6 +79,9 @@
          </div>
          <input type="hidden" value={{turn_number}} id="turn_tracker">
          <input type="submit" name="execute_turn" value="Execute Turn">
+         {% endif %}
+         {% if turn_validity_error != "" %}
+            <h4 style="color:red;"> {{ turn_validity_error }} </h4>
          {% endif %}
       </form>
       {% include 'pik_graph.html' %}
