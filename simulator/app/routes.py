@@ -15,10 +15,22 @@ def index():
         node_count = 0
         turn_number = 0
         pik_pop = ['']
+        active_pikmin_controller = []
+        red_count = 0
+        colored_count = 0
     else:
         node_count = graphs.fetch_size()
         turn_number = graphs.fetch_turn()
         pik_pop = graphs.fetch_pik_pop()
+        #red_count = graphs.fetch_red_count()
+        #colored_count = graphs.fetch_colored_count()
+
+        active_pikmin_controller = []
+        print("Check", pik_pop)
+        if pik_pop != ['']:
+            for pikmin in pik_pop:
+                active_pikmin_controller.append([pikmin,"pikmin_move_selector_"+pikmin.replace(" ", "_"),"pikmin_color_selector_"+pikmin.replace(" ", "_")])
+
 
 
     if request.method == "POST":
@@ -32,6 +44,18 @@ def index():
         default_graph_family = 'Path'
         init_graph_family = request.form.get('input_graph_family', default_graph_family)
 
+        # Collect Input from the manual instructions
+        # Input should be in the form [["Pik n","v","red"]]
+        pikmin_total_instructions = []
+        for pik_movement_input_form in active_pikmin_controller:
+            pikmin_i_instructions = []
+            pikmin_i_instructions.append(pik_movement_input_form[0])
+            pikmin_i_instructions.append(request.form.get(pik_movement_input_form[1]))
+            pikmin_i_instructions.append(request.form.get(pik_movement_input_form[2]))
+            pikmin_total_instructions.append(pikmin_i_instructions)
+        print("Pik Instructions: ", pikmin_total_instructions)
+
+
         # Submit Buttons
         add_node = request.form.get('add_node', None)
         init_pik = request.form.get('init_pik', None)
@@ -43,7 +67,6 @@ def index():
             graphs.run_automatic()
         elif init_pik:
             pik_pop = graphs.init_pik(int(init_pos))
-            print(pik_pop)
         elif init_graph:
             if init_graph_family == "path": 
                 graphs.load_path(int(size))
@@ -68,4 +91,10 @@ def index():
         move_loc = request.form.get("input_pik_move", default_move_pos)
         #graphs.move_pik(cur_pik,int(move_loc))
 
-    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents = pik_pop, graph_vertices=range(node_count), turn_number=turn_number)
+        # Update the options again at the end of an input in the likely case that something changed
+        if pik_pop != ['']:
+            for pikmin in pik_pop:
+                active_pikmin_controller.append([pikmin,"pikmin_move_selector_"+pikmin.replace(" ", "_"),"pikmin_color_selector_"+pikmin.replace(" ", "_")])
+        
+    print(active_pikmin_controller)
+    return render_template('pik_sim.html', graph_size = node_count, pikmin_agents_control = active_pikmin_controller, graph_vertices=range(node_count), turn_number=turn_number, red_count = 0, colored_count = 0)

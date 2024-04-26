@@ -22,33 +22,42 @@
             <br>
             <input type="submit" name="init_graph" value="Load Graph">
          </div>
-         <div style="background-color:#989b9e;padding:6px;">
-            <h4>Run Automatic Analysis (WIP)</h4>
-            <input type="submit" name="run_automatic" value="Run Automatic Analysis">
+         {% if graph_size > 0 %}
+         <div style="background-color:#797a7d;padding:6px;">
+            <div style="padding:6px;">
+               <h4>Run Automatic Analysis (WIP)</h4>
+               <input type="submit" name="run_automatic" value="Run Automatic Analysis">
+            </div>
+         
+            <div style="padding:6px;">
+               <h4>Run Manual Analysis (WIP)</h4>
+               <label style="color:#141414;" for="input_pik_pos">Select Starting Vertex:</label>
+               <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
+               <input type="submit" name="init_pik" value="Initialize Pikmin">
+            </div>
          </div>
-        
-         <div style="background-color:#989b9e;padding:6px;">
-            <h4>Run Manual Analysis (WIP)</h4>
-            <label style="color:#141414;" for="input_pik_pos">Select Starting Vertex:</label>
-            <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
-            <input type="submit" name="init_pik" value="Initialize Pikmin">
-         </div>
+         {% endif %}
          <br>
          <div>
             <h2>Current Game State: </h2>
-            <h4>Turn: {{ turn_number }}</h4>
+            <div style="text-indent:50px;">
+               <h4>Turn: {{ turn_number }}</h4>
+               <h4># of Verticies Colored Red: {{ red_count }}</h4>
+               <h4>Vertices Colored: {{ colored_count }} / {{ graph_size }}</h4>
+               <h4>Current Support Score: {{ red_count + turn_number}}</h4>
+            </div>
          </div>
          <div>
-            {% if pikmin_agents != [''] %}
+            {% if pikmin_agents_control != [] %}
             <h3>Provide Instructions</h3>
-            {% for agent in pikmin_agents %}
-               {{ agent }}: Move to 
-                  <select name="pikmin_move_selector" value=1>
+            {% for agent_controller in pikmin_agents_control %}
+               {{ agent_controller[0] }}: Move to 
+                  <select name={{agent_controller[1]}} value=1>
                   {% for vertex in graph_vertices%}
                      <option value={{vertex}} SELECTED>{{vertex}}</option>
                   {% endfor %}
                   </select>, then color
-                  <select name="pikmin_color_selector">
+                  <select name={{agent_controller[2]}}>
                      <option value="red">Red</option>
                      <option value="blue">Blue</option>
                      <option value="null">Nothing</option>
