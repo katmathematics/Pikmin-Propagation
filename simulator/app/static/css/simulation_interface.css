@@ -1,0 +1,175 @@
+:root{
+    --slateGrey:rgb(84, 96, 107);
+    --offWhite:rgb(242, 245, 247);
+    --lightSlateGrey:rgb(112, 123, 134);
+    --darkSlateGrey:rgb(96, 107, 118);
+    --darkestSlateGrey:rgb(68, 74, 81);
+    --offBlack: #0c0c16;
+    --pikRed: rgb(205, 29, 29);
+    --pikRedHighlight: rgb(240, 53, 53);
+    --pikRedDark: rgb(176, 29, 29);
+}
+
+.header {
+    padding-top: .5%;
+    padding-bottom: .5%;
+    font-size: 200%;
+    color: var(--offWhite);
+    background-color: var(--slateGrey);
+    
+}
+
+.entire_page {
+    background-color: var(--offWhite);
+}
+
+.initialization_menu {
+    background-color:var(--darkSlateGrey);
+    color: var(--offWhite);
+    padding:.5%;
+    font-size: 175%;
+}
+
+h3.initialization_menu {
+    font-size: 200%;
+}
+
+.error_message {
+    color: var(--offBlack);
+    background-color:rgba(205, 29, 29,.5);
+    border-left:5px solid var(--pikRed);
+    margin-left:10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 3px;
+    margin-top: 7px;
+    font-size: 210%;
+}
+
+.footer {
+  bottom: 0;
+  font-size: 200%;
+  color: var(--offWhite);
+  text-align: center;
+  width: 100%;
+  background-color: var(--slateGrey);
+  padding-top: .5%;
+  padding-bottom: .5%;
+}
+
+.select_analysis {
+    display: grid;
+    grid-template-columns: auto auto;
+    border-top: 8px dashed var(--slateGrey);
+    border-bottom: 8px solid var(--slateGrey);
+    background-color: var(--darkSlateGrey);
+    padding-top: .5%;
+    padding-bottom: .5%;
+}
+
+.turn_history {
+    margin-top: .5%;
+    font-size: 200%;
+    max-height: 27vh;
+}
+
+h2.turn_history{
+    font-size: 175%;
+}
+
+
+.turn_history_history {
+    max-height: 27vh;
+    overflow-y: auto;
+    font-size: 75%;
+}
+
+.analysis_option {
+    text-align: center;
+    font-size: 140%;
+    background-color: var(--darkSlateGrey);
+    color: var(--offWhite);
+    vertical-align: middle;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+h4.analysis_option{
+    font-size: 125%;
+    padding-bottom: 6px;
+}
+
+label.analysis_option{
+    padding-bottom: 6px;
+}
+
+.initialization_menu_form {
+    color: var(--offWhite);
+    font-size: 100%;
+    padding-bottom: 10px;
+}
+
+.initialization_menu_form_black_override {
+    color: var(--offBlack);
+    font-size: 100%;
+}
+
+.score_display {
+    margin-bottom: 10px;
+}
+
+.turn_input {
+    border-top: 5px dashed var(--darkSlateGrey);
+    font-size: 150%;
+}
+
+.turn_input_spacer {
+    border-top: 5px dashed var(--darkSlateGrey);
+    font-size: 150%;
+    padding-bottom: 5px;
+}
+
+/* CSS */
+.button-5 {
+    align-items: center;
+    background-clip: padding-box;
+    background-color: var(--pikRed);
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: var(--offWhite);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+  }
+  
+  .button-5:hover,
+  .button-5:focus {
+    background-color: var(--pikRedHighlight);
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  }
+  
+  .button-5:hover {
+    transform: translateY(-1px);
+  }
+  
+  .button-5:active {
+    background-color: var(--pikRedDark);
+    box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+    transform: translateY(0);
+  }

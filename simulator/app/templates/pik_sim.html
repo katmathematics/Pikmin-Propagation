@@ -1,15 +1,19 @@
 <html> 
   <head> 
-    
+   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/simulation_interface.css') }}">
   </head> 
 
-   <body> 
-      <h1>Pikmin Simulation</h1>
+   <body class = "entire_page"> 
+
+      <div class = "header" style="border-bottom: 7px solid rgb(68, 74, 81);">
+         <h1 class = "header">&emsp;Pikmin Propagation Simulator</h1>
+      </div>
+      
       <form method="POST">
-         <div style="background-color:#989b9e;padding:6px;">
-            <h3>Initialize Graph</h3>
-            <label for="input_graph_family">Choose a graph type:</label>
-            <select name="input_graph_family" id="input_graph_family">
+         <div class = "initialization_menu">
+            <h3 class = "initialization_menu">Initialize Graph</h3>
+            <label class="initialization_menu_form" for="input_graph_family">&emsp;Choose a graph type:</label>
+            <select class="initialization_menu_form_black_override" name="input_graph_family" id="input_graph_family">
                <option value="path">Path</option>
                <option value="cycle">Cycle</option>
                <option value="star">Star</option>
@@ -17,30 +21,30 @@
                <option value="complete">Complete</option>
             </select>
             <br>
-            <label style="color:#141414;" for="input_size">Select Number of Vertices:</label>
-            <input id="number" type="number" name="input_size" value="1" min="1" max="30" />
+            <label class="initialization_menu_form" for="input_size">&emsp;Select Number of Vertices:</label>
+            <input class="initialization_menu_form_black_override" id="number" type="number" name="input_size" value="1" min="1" max="30" />
             <br>
-            <input type="submit" name="init_graph" value="Load Graph">
+            &emsp;<input class="button-5" type="submit" name="init_graph" value="Load Graph">
          </div>
          {% if graph_size > 0 %}
-         <div style="background-color:#797a7d;padding:6px;">
-            <div style="padding:6px;">
-               <h4>Run Automatic Analysis (WIP)</h4>
-               <input type="submit" name="run_automatic" value="Run Automatic Analysis">
-            </div>
-         
-            <div style="padding:6px;">
-               <h4>Run Manual Analysis</h4>
-               <label style="color:#141414;" for="input_pik_pos">Select Starting Vertex:</label>
+         <div class = "select_analysis">
+            <div class = "analysis_option" style="padding:6px;">
+               <h4 class = "analysis_option">Run Manual Analysis</h4>
+               <label class="analysis_option" for="input_pik_pos">Select Starting Vertex: </label>
                <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
-               <input type="submit" name="init_pik" value="Initialize Pikmin">
+               <br>
+               <input class="button-5" type="submit" name="init_pik" value="Initialize Pikmin">
+            </div>
+            <div class = "analysis_option" style="padding:6px;">
+               <h4 class = "analysis_option">Run Automatic Analysis (WIP)</h4>
+               <input class="button-5" type="submit" name="run_automatic" value="Run Automatic Analysis">
             </div>
          </div>
          {% endif %}
          <br>
-         <div>
+         <div class="score_display">
             {% if not game_complete %}
-               <h2>Current Game State: </h2>
+               <h2>&emsp;Current Game State: </h2>
                <div style="text-indent:50px;">
                   <h4>Turn: {{ turn_number }}</h4>
                   <h4># of Verticies Colored Red: {{ red_count }}</h4>
@@ -49,7 +53,7 @@
                </div>
             {% endif %}
             {% if game_complete %}
-               <h2>Final Game State: </h2>
+               <h2>&emsp;Final Game State: </h2>
                <div style="text-indent:50px;">
                   <h4>Turn: {{ turn_number }}</h4>
                   <h4># of Verticies Colored Red: {{ red_count }}</h4>
@@ -58,9 +62,9 @@
                </div>
             {% endif %}
          </div>
-         <div>
+         <div class="turn_input">
             {% if pikmin_agents_control != [] and not game_complete %}
-            <h3>Provide Instructions</h3>
+            <h3 style="margin-top: 5px;">Provide Instructions</h3>
             {% for agent_controller in pikmin_agents_control %}
                {{ agent_controller[0] }}: Move to 
                   <select name={{agent_controller[1]}} value=1>
@@ -76,24 +80,29 @@
                   <input type="hidden" value={{agent}} id="executor_pikmin">
                   <br>
             {% endfor %}
+            <input type="hidden" value={{turn_number}} id="turn_tracker">
+            <input class="button-5" style="margin-top:10px" type="submit" name="execute_turn" value="Execute Turn">
          </div>
-         <input type="hidden" value={{turn_number}} id="turn_tracker">
-         <input type="submit" name="execute_turn" value="Execute Turn">
          {% endif %}
          {% if turn_validity_error != "" %}
-            <h4 style="color:red;"> {{ turn_validity_error }} </h4>
+            <h4 class="error_message"> {{ turn_validity_error }} </h4>
          {% endif %}
       </form>
       {% include 'pik_graph.html' %}
       {% if instructions_history != [] %}
-      <div>
-         <h2>Turn History: </h2>
-            <ul>
+      <div class="turn_history">
+         <h2>&emsp;Turn History: </h2>
+            <ul class="turn_history_history">
                {% for turn in instructions_history %}
                   <li><b>Turn {{ turn[0] }}:</b> {% for pikmin_step in turn[1] %}&#40; {{ pikmin_step[0] }}, move to {{ pikmin_step[1] }}, then color {{ pikmin_step[2] }} &#41;</li>{% endfor %}
                {% endfor %}
             </ul>
       </div>
       {% endif %}
+      <div class="footer">
+         Simulation tool created by Katja Mathesius
+         <br class="footer">
+         Based on <i>Pikmin Propagation</i> by DJ Henson and Katja Mathesius, under the supervision of Dr. Joshua Carlson
+      </div>
   </body> 
 </html>
