@@ -3,62 +3,29 @@ from pyvis.network import Network
 def run_automatic():
     global net
 
-<<<<<<< Updated upstream
-    global turn_count
-    global red_count
-    global colored_count
-
-    # So. for the moment the easiest upper limit on turns is the size of the graph ^ size of the graph
-    # This covers the worst case where it is somehow optimal to route through the entire graph every single time
-    # you need to color a vertex
-    # But- we can add a termination tracker for red count, and when the game is finished, and we can front load
-    # so probably we'll never reach a strategy of size^size
-
     best_strategy = []
     best_support = float("inf")
-    best_strat_red = float("inf")
-    best_strat_turn = float("inf")
-
-    for starting_vertex in net.get_nodes():
-        current_strategy = []
-        turn_count = 0
-        red_count = 0
-        colored_count = 0
-        support = 0
-
-        # But rn this will only evaluate one strategy, we need to find a way to feed it all possible combos still
-        while not check_completion() and support < best_support:
-            current_strategy.append([])
-
-            support = turn_count + red_count
-
-        
-        net.neighbors(starting_vertex)
-
-    optimal_strategy = {
-        "support":best_support,
-        "turn":best_strat_turn,
-        "red":best_strat_red,
-        "strategy":best_strategy
-    }
-    return optimal_strategy
-=======
-    best_strategy = []
     # We want to run the analysis from each possible vertex
     for vertex in net.get_nodes():
         current_agents = []
         # Init the first pikmin on the current node of examination
         current_agents.append(init_pik(vertex))
 
-        # The first turn will always be to color without moving. If the size of the graph is greater than 2 we might
-        # as well start by coloring red. If its less than that, we should color blue.
+
+        # To make sure we've considered every strategy, we must consider every way to move off of spawn
+        # then we must consider every... this seems like a good mind puzzle for Dr. Carlson I think I'll hold off on this
+        # till tomorrow
+
+        # The first turn will always be to color without moving. This will be the only turn we shouldn't move
+        # If the size of the graph is greater than 2 we might as well start by coloring red. If its less than that, we should color blue.
         if len(net.get_nodes()) > 2:
             # Instructions in manual mode are passed in the form of "[agent,move,color]"
-            while not check_completion() and 
-            for agent in current_agents:
+            #while not check_completion() and check_support() < best_support:
+            #for agent in current_agents:
+            #if check_support() < best_support:
+            print("Boop.")
 
 
->>>>>>> Stashed changes
 
 def init_globals():
     global turn_count
