@@ -3,6 +3,7 @@ from pyvis.network import Network
 def run_automatic():
     global net
 
+<<<<<<< Updated upstream
     global turn_count
     global red_count
     global colored_count
@@ -41,6 +42,23 @@ def run_automatic():
         "strategy":best_strategy
     }
     return optimal_strategy
+=======
+    best_strategy = []
+    # We want to run the analysis from each possible vertex
+    for vertex in net.get_nodes():
+        current_agents = []
+        # Init the first pikmin on the current node of examination
+        current_agents.append(init_pik(vertex))
+
+        # The first turn will always be to color without moving. If the size of the graph is greater than 2 we might
+        # as well start by coloring red. If its less than that, we should color blue.
+        if len(net.get_nodes()) > 2:
+            # Instructions in manual mode are passed in the form of "[agent,move,color]"
+            while not check_completion() and 
+            for agent in current_agents:
+
+
+>>>>>>> Stashed changes
 
 def init_globals():
     global turn_count
@@ -242,6 +260,11 @@ def load_complete(n):
     net.save_graph("app/templates/pik_graph.html")    
     init_globals()
     return n
+
+def check_support():
+    global turn_count
+    global pik_pop # len(pik_pop) - 1 (the initial pikmin) is a stand in for # red
+    return turn_count + len(pik_pop) - 1
 
 def set_turn(turn):
     global turn_count
