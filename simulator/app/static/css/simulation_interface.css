@@ -10,6 +10,11 @@
     --pikRedDark: rgb(176, 29, 29);
 }
 
+body {
+    min-height: 85%;
+    max-height: 85%;
+}
+
 .header {
     padding-top: .5%;
     padding-bottom: .5%;
@@ -47,6 +52,7 @@ h3.initialization_menu {
 }
 
 .footer {
+  position: static;
   bottom: 0;
   font-size: 200%;
   color: var(--offWhite);
@@ -55,6 +61,7 @@ h3.initialization_menu {
   background-color: var(--slateGrey);
   padding-top: .5%;
   padding-bottom: .5%;
+  max-height: 15%;
 }
 
 .select_analysis {
