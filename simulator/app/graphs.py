@@ -16,6 +16,14 @@ def run_automatic():
         # then we must consider every... this seems like a good mind puzzle for Dr. Carlson I think I'll hold off on this
         # till tomorrow
 
+        # So what if we go. For each vertex, for each turn create every possible instruction based on every possible pikmin, 
+        # check on each turn if the move was invalid and then attempt to execute that turn. Then move to the next 
+        # turn and repeat until we violate rules
+        # if we meet completion before we get a worst support write that as the best strategy
+
+
+
+
         # The first turn will always be to color without moving. This will be the only turn we shouldn't move
         # If the size of the graph is greater than 2 we might as well start by coloring red. If its less than that, we should color blue.
         if len(net.get_nodes()) > 2:
@@ -25,7 +33,24 @@ def run_automatic():
             #if check_support() < best_support:
             print("Boop.")
 
+def combine_possible_steps(valid_moves, step_instructions=[]):
+    try:
+        next(iter(valid_moves))
+    except:
+        print("Valid Combination ", step_instructions)
+    else:
+        for instruction in valid_moves[next(iter(valid_moves))]:
+            print("Instruction: ", instruction)
+            print("Cur Step: ", step_instructions)
+            step_instructions.append(instruction)
+            remaining_moves = dict(valid_moves)
+            del remaining_moves[next(iter(valid_moves))]
+            combine_possible_steps(remaining_moves,step_instructions)
+            step_instructions = []
 
+def execute_multi_step(step_instructions):
+    for step in step_instructions:
+        execute_step(step)
 
 def init_globals():
     global turn_count
