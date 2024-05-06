@@ -2,18 +2,21 @@
     --slateGrey:rgb(84, 96, 107);
     --offWhite:rgb(242, 245, 247);
     --lightSlateGrey:rgb(112, 123, 134);
+    --lightSlateGreyTranslucent:rgba(112, 123, 134, 0.2);
     --darkSlateGrey:rgb(96, 107, 118);
     --darkestSlateGrey:rgb(68, 74, 81);
     --offBlack: #0c0c16;
     --pikRed: rgb(205, 29, 29);
     --pikRedHighlight: rgb(240, 53, 53);
     --pikRedDark: rgb(176, 29, 29);
+    --pikBlue: rgb(27, 44, 226);
+    --pikBlueHighlight: rgb(39, 87, 245);
+    --pikBlueDark: rgb(36, 34, 171);
+    --pikYellow: rgb(241, 245, 16);
+    --pikYellowHighlight: rgb(255, 246, 82);
+    --pikYellowDark: rgb(212, 200, 32);
 }
 
-body {
-    min-height: 85%;
-    max-height: 85%;
-}
 
 .header {
     padding-top: .5%;
@@ -25,8 +28,9 @@ body {
 }
 
 .entire_page {
-    background-color: var(--offWhite);
+    background-color: var(--offWhite);    
 }
+
 
 .initialization_menu {
     background-color:var(--darkSlateGrey);
@@ -52,8 +56,9 @@ h3.initialization_menu {
 }
 
 .footer {
-  position: static;
+  margin-top: auto;
   bottom: 0;
+  position: fixed;
   font-size: 200%;
   color: var(--offWhite);
   text-align: center;
@@ -78,6 +83,10 @@ h3.initialization_menu {
     margin-top: .5%;
     font-size: 200%;
     max-height: 27vh;
+}
+
+.turn_history_box {
+    min-height: 20vh
 }
 
 h2.turn_history{
@@ -122,18 +131,29 @@ label.analysis_option{
 }
 
 .score_display {
-    margin-bottom: 10px;
+    margin: 10px;
+    border-top: 5px solid var(--pikRedHighlight);
+    border-right: 5px solid var(--pikBlueHighlight);
+    border-bottom: 5px solid var(--pikBlueHighlight);
+    border-left: 5px solid var(--pikRedHighlight);
+    border-radius: 20px;
+    background-color: var(--lightSlateGreyTranslucent);
+    padding: 5px;
+    padding-top: 7px;
+    max-width: 30%;
 }
 
 .turn_input {
     border-top: 5px dashed var(--darkSlateGrey);
     font-size: 150%;
+    padding-top: 10px;
 }
 
 .turn_input_spacer {
     border-top: 5px dashed var(--darkSlateGrey);
     font-size: 150%;
     padding-bottom: 5px;
+
 }
 
 /* CSS */

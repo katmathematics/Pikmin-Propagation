@@ -3,6 +3,7 @@
    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/simulation_interface.css') }}">
   </head> 
 
+<div class="entire_page_with_footer"></div>
    <body class = "entire_page"> 
 
       <div class = "header" style="border-bottom: 7px solid rgb(68, 74, 81);">
@@ -31,7 +32,7 @@
             <div class = "analysis_option" style="padding:6px;">
                <h4 class = "analysis_option">Run Manual Analysis</h4>
                <label class="analysis_option" for="input_pik_pos">Select Starting Vertex: </label>
-               <input id="number" type="number" name="input_pik_pos" value="0" min="0" max={{graph_size}} />
+               <input id="number" type="number" name="input_pik_pos" value="1" min="1" max={{graph_size}} />
                <br>
                <input class="button-5" type="submit" name="init_pik" value="Initialize Pikmin">
             </div>
@@ -90,13 +91,19 @@
       </form>
       {% include 'pik_graph.html' %}
       {% if instructions_history != [] %}
-      <div class="turn_history">
-         <h2>&emsp;Turn History: </h2>
-            <ul class="turn_history_history">
-               {% for turn in instructions_history %}
-                  <li><b>Turn {{ turn[0] }}:</b> {% for pikmin_step in turn[1] %}&#40; {{ pikmin_step[0] }}, move to {{ pikmin_step[1] }}, then color {{ pikmin_step[2] }} &#41;</li>{% endfor %}
-               {% endfor %}
-            </ul>
+      <div class="turn_history_box">
+         <div class="turn_history">
+            <h2>&emsp;Turn History: </h2>
+               <ul class="turn_history_history">
+                  {% for turn in instructions_history %}
+                     <li><b>Turn {{ turn[0] }}:</b> {% for pikmin_step in turn[1] %}&#40; {{ pikmin_step[0] }}, move to vertex {{ pikmin_step[1] }}, then color {{ pikmin_step[2] }} &#41;</li>{% endfor %}
+                  {% endfor %}
+               </ul>
+         </div>
+      </div>
+      {% endif %}
+      {% if instructions_history == [] %}
+      <div class="turn_history_box">
       </div>
       {% endif %}
   </body> 
@@ -104,5 +111,6 @@
    Simulation tool created by Katja Mathesius
    <br class="footer">
    Based on <i>Pikmin Propagation</i> by DJ Henson and Katja Mathesius, under the supervision of Dr. Joshua Carlson
+   </div>
 </div>
 </html>
