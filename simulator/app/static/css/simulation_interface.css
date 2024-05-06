@@ -2,7 +2,7 @@
     --slateGrey:rgb(84, 96, 107);
     --offWhite:rgb(242, 245, 247);
     --lightSlateGrey:rgb(112, 123, 134);
-    --lightSlateGreyTranslucent:rgba(112, 123, 134, 0.2);
+    --lightSlateGreyTranslucent:rgba(112, 123, 134, 0.1);
     --darkSlateGrey:rgb(96, 107, 118);
     --darkestSlateGrey:rgb(68, 74, 81);
     --offBlack: #0c0c16;
@@ -40,7 +40,7 @@
 }
 
 h3.initialization_menu {
-    font-size: 200%;
+    font-size: 175%;
 }
 
 .error_message {
@@ -132,21 +132,24 @@ label.analysis_option{
 
 .score_display {
     margin: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
     border-top: 5px solid var(--pikRedHighlight);
     border-right: 5px solid var(--pikBlueHighlight);
     border-bottom: 5px solid var(--pikBlueHighlight);
     border-left: 5px solid var(--pikRedHighlight);
     border-radius: 20px;
     background-color: var(--lightSlateGreyTranslucent);
-    padding: 5px;
-    padding-top: 7px;
-    max-width: 30%;
+    padding: 7px;
+    padding-top: 9px;
+    max-width: 20%;
 }
 
 .turn_input {
     border-top: 5px dashed var(--darkSlateGrey);
     font-size: 150%;
     padding-top: 10px;
+    padding-left: 25px;
 }
 
 .turn_input_spacer {
