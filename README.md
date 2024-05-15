@@ -1,6 +1,6 @@
 # Pikmin-Propagation Simulator
 ## Created By [Katja Mathesius](https://github.com/katmathematics)
-Flask tool for computing the pikmin propagation number of graphs. Based on research of the same title by [Katja Mathesius](https://github.com/katmathematics) and DJ Henson, as supervised by [Dr. Joshua Carlson](https://www.drake.edu/math/faculty/joshuacarlson/)_
+Flask tool for computing the pikmin propagation number of graphs. Based on research of the same title by [Katja Mathesius](https://github.com/katmathematics) and DJ Henson, as supervised by [Dr. Joshua Carlson](https://www.drake.edu/math/faculty/joshuacarlson/).
 
 ## Description - What is Pikmin Propagation?
 Pikmin Propagation is a game on graphs which combines elements of graph searching problems and graph coloring problems. The objective of the game is to completely color a graph by utilizing "pikmin agents"- entities that can move between vertices on a graph and color vertices. Pikmin agents have the special property that on a turn they can choose to move to an adjacent vertex, then choose to color that vertex either "red" or "blue". Coloring a vertex red creates an additional pikmin, while coloring blue has no special affects. The game ends when the graph is fully colored, and optimality of a game is judged by minimizing the total turns taken plus the total vertices colored red.
