@@ -1,0 +1,5 @@
+Flask==3.0.3
+pyvis==0.3.2
+gunicorn==22.0.0
+Werkzeug==3.0.3
+Flask-CORS==4.0.1

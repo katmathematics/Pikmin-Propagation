@@ -1,29 +1,66 @@
 from pyvis.network import Network
+from flask import Flask, request, render_template, session
+
+def dematerialize_net(net):
+    #print("Nodessss: ", net.get_nodes())
+    graph_nodes = net.get_nodes()
+    graph_colors = []
+    graph_labels = []
+    graph_shapes = []
+    graph_titles = []
+    for node in graph_nodes:
+        node_details = net.get_node(node)
+        graph_colors.append(node_details["color"])
+        graph_labels.append(node_details["label"])
+        graph_shapes.append(node_details["shape"])
+        graph_titles.append(node_details["title"])
+    #print("Labelsssss: ", graph_labels)
+
+    graph_data= {
+    "nodes": graph_nodes,
+    "colors": graph_colors,
+    "labels": graph_labels,
+    "shapes": graph_shapes,
+    "titles": graph_titles
+    }
+    edge_data = net.get_edges()
+
+    session["network_nodes"] = graph_data
+    session["network_edges"] = edge_data
+
+
+
+def rematerialize_net():
+    net = Network()
+    net.add_nodes(session["network_nodes"]["nodes"], color=session["network_nodes"]["colors"], label=session["network_nodes"]["labels"], shape=session["network_nodes"]["shapes"], title=session["network_nodes"]["titles"])
+
+    for edge in session["network_edges"]: 
+        net.add_edge(edge["from"],edge["to"])
+
+    return net
 
 def run_automatic():
-    global net
+    net = rematerialize_net()
     for vertex in net.get_nodes():
         # Do something
         print(vertex)
 
 def init_globals():
-    global turn_count
-    global red_count
-    global colored_count
-    global instructions_history
-
-    turn_count = 0
-    red_count = 0
-    colored_count = 0
-    instructions_history = []
+    session["turn_number"] = 0
+    session["red_count"] = 0
+    session["colored_count"] = 0
+    session["instructions_history"] = []
+    session["pik_pop"] = ['']
 
 def color_node(node_idx):
-    global net
+    net = rematerialize_net()
     net.nodes[node_idx]['color'] = '#0b22b8'
-    net.save_graph("app/templates/pik_graph.html")
+    net.save_graph("templates/pik_graph.html")
 
 def check_step(step_instructions):
-    global net
+    print("Instructions: ", step_instructions)
+
+    net = rematerialize_net()
 
     # Assume valid until proven invalid
     step_valid = True
@@ -41,14 +78,10 @@ def check_step(step_instructions):
         if net.nodes[(int(step_instructions[1])-1)]['color'] != '#f7f7f5':
             step_valid = False
 
-    print(step_valid)
     return step_valid
 
 def execute_step(step_instructions):
-    global net
-    global red_count
-    global colored_count
-    global pik_pop
+    net = rematerialize_net()
 
     all_nodes = net.get_nodes()
     for node_idx in all_nodes:
@@ -64,22 +97,24 @@ def execute_step(step_instructions):
     if step_instructions[2] == "red":
         #print("Ran red")
         net.nodes[new_node_idx]['color'] = '#f61709'
-        new_pik_name = "Pik " + str(len(pik_pop)+1)
+        new_pik_name = "Pik " + str(len(session["pik_pop"])+1)
         net.nodes[new_node_idx]['label'] += " " + new_pik_name
         net.get_node(new_node_idx)['label'] = net.get_node(new_node_idx)['label'].strip()
 
-        pik_pop.append(new_pik_name)
+        session["pik_pop"].append(new_pik_name)
 
-        red_count += 1
-        colored_count += 1
+        session["red_count"] += 1
+        session["colored_count"] += 1
     elif step_instructions[2] == "blue":
         #print("Ran blue")
         net.nodes[new_node_idx]['color'] = '#091df6'
-        colored_count += 1
+        session["colored_count"] += 1
 
-    net.save_graph("app/templates/pik_graph.html")
+    net.save_graph("templates/pik_graph.html")
+    dematerialize_net(net)
 
 def check_completion():
+    net = rematerialize_net()
     all_nodes = net.get_nodes()
     complete = True
     for node_idx in all_nodes:
@@ -88,43 +123,40 @@ def check_completion():
             complete = False
     return complete
 
-def glimpse_network(): 
-    net.show_buttons(['manipulation'])
-    net.show("gameofthrones.html", notebook=False)
-
 def load_n_node(n):
     net = Network()
     net.add_nodes(range(n))
     #for i in range(n):
     #    net.add_nodes([str(i)],color=['#222222'])
-    net.save_graph("app/templates/pik_graph.html")    
+    net.save_graph("templates/pik_graph.html") 
+    dematerialize_net(net)   
     return n
 
 def init_pik(init_idx):
-    global net
-    global turn_count
+    net = rematerialize_net()
 
-    turn_count = 0
+    session["turn_number"] = 0
 
     if init_idx != 0:
         init_idx = init_idx - 1
 
     # Clear out the labels of everything in the graph
-    for node_idx in range(len(net.get_nodes())):
-        net.nodes[node_idx]['label'] = ''
+    #for node_idx in range(len(net.get_nodes())):
+    #    net.nodes[node_idx]['label'] = ''
 
     # Iniatlize the node we want with the label
-    net.nodes[init_idx]['label'] = 'Pik 1'
+    pik_name = 'Pik 1'
+    net.nodes[init_idx]['label'] += ' ' + pik_name
     
-    net.save_graph("app/templates/pik_graph.html")   
+    net.save_graph("templates/pik_graph.html")   
+    dematerialize_net(net)
 
-    print(net.get_node(init_idx)["label"])
-    set_pik_pop([net.get_node(init_idx)["label"]])
-    return([net.get_node(init_idx)["label"]])
+    set_pik_pop([pik_name])
+    return([pik_name])
     #net.nodes[node_idx]['color'] = '#0b22b8'
 
 def move_pik(cur_pik, move_loc):
-    global net
+    net = rematerialize_net()
 
     # Clear out the labels of everything in the graph
     for node_idx in range(len(net.get_nodes())):
@@ -134,54 +166,62 @@ def move_pik(cur_pik, move_loc):
     # Iniatlize the node we want with the label
     net.nodes[move_loc]['label'] = cur_pik
     
-    net.save_graph("app/templates/pik_graph.html")   
+    net.save_graph("templates/pik_graph.html")   
+    dematerialize_net(net)
 
 def load_path(n):
-    global net
+    session.clear()
     net = Network()
     net.add_nodes(range(n))
     for node_idx in range(n):
         net.nodes[node_idx]['color'] = '#f7f7f5'
         net.nodes[node_idx]['title'] = str(node_idx+1)
+        net.nodes[node_idx]['label'] = "Vertex " + str(node_idx+1) + ": "
         if node_idx > 0:
             net.add_edge((node_idx-1),node_idx)
-    net.save_graph("app/templates/pik_graph.html")    
+    net.save_graph("templates/pik_graph.html") 
+    dematerialize_net(net)   
     init_globals()
     return n
 
 def load_cycle(n):
-    global net
+    session.clear()
     net = Network()
     net.add_nodes(range(n))
     for node_idx in range(n):
         net.nodes[node_idx]['color'] = '#f7f7f5'
         net.nodes[node_idx]['title'] = str(node_idx+1)
+        net.nodes[node_idx]['label'] = "Vertex " + str(node_idx+1) + ": "
         if n > 1:
             net.add_edge(node_idx%n,(node_idx+1)%n)
-    net.save_graph("app/templates/pik_graph.html")    
+    net.save_graph("templates/pik_graph.html")
+    dematerialize_net(net)
     init_globals()
     return n
 
 def load_star(n):
-    global net
+    session.clear()
     net = Network()
     net.add_nodes(range(n))
     for node_idx in range(n):
         net.nodes[node_idx]['color'] = '#f7f7f5'
         net.nodes[node_idx]['title'] = str(node_idx+1)
+        net.nodes[node_idx]['label'] = "Vertex " + str(node_idx+1) + ": "
         if node_idx > 0:
             net.add_edge(0,node_idx)
-    net.save_graph("app/templates/pik_graph.html")   
+    net.save_graph("templates/pik_graph.html")   
+    dematerialize_net(net)
     init_globals() 
     return n
 
 def load_wheel(n):
-    global net
+    session.clear()
     net = Network()
     net.add_nodes(range(n))
     for node_idx in range(n):
         net.nodes[node_idx]['color'] = '#f7f7f5'
         net.nodes[node_idx]['title'] = str(node_idx+1)
+        net.nodes[node_idx]['label'] = "Vertex " + str(node_idx+1) + ": "
         if node_idx > 0:
             net.add_edge(0,node_idx)
         if n > 2:
@@ -189,82 +229,85 @@ def load_wheel(n):
                 net.add_edge(node_idx%n,1)
             else: 
                 net.add_edge(node_idx%n,(node_idx+1)%n)
-    net.save_graph("app/templates/pik_graph.html")  
+    net.save_graph("templates/pik_graph.html")  
+    dematerialize_net(net)
     init_globals()  
     return n
 
 def load_complete(n):
-    global net
+    session.clear()
     net = Network()
     net.add_nodes(range(n))
     for node_idx in range(n):
         net.nodes[node_idx]['color'] = '#f7f7f5'
         net.nodes[node_idx]['title'] = str(node_idx+1)
+        net.nodes[node_idx]['label'] = "Vertex " + str(node_idx+1) + ": "
         for node_idx_secondary in net.get_nodes():
             if node_idx_secondary != node_idx:
                 net.add_edge(node_idx,node_idx_secondary)
-    net.save_graph("app/templates/pik_graph.html")    
+    net.save_graph("templates/pik_graph.html")  
+    dematerialize_net(net)  
     init_globals()
     return n
 
 def set_turn(turn):
-    global turn_count
-    turn_count += turn
-    return turn_count
+    session["turn_number"] += turn
+    return session["turn_number"]
 
 def increment_turn():
-    global turn_count
-    turn_count += 1
-    return turn_count
+    session["turn_number"] += 1
+    return session["turn_number"]
 
 def set_pik_pop(new_pik_pop):
-    global pik_pop
-    pik_pop = new_pik_pop
-    return pik_pop
+    session["pik_pop"] = new_pik_pop
+    return session["pik_pop"]
 
 def fetch_pik_pop():
     try:
-        return pik_pop
+        print("Cur Pik Pop? ", session["pik_pop"])
+        return session["pik_pop"]
     except:
         return ['']
 
 def fetch_red_count():
     try:
-        return red_count
+        return session["red_count"]
     except:
         return 0
     
 def fetch_colored_count():
     try:
-        return colored_count
+        return session["colored_count"]
     except:
         return 0
     
 def fetch_instructions_history():
     try:
-        return instructions_history
+        return session["instructions_history"]
     except:
         return []
     
 def fetch_size():
     try:
+        net = rematerialize_net()
         return len(net.get_nodes())
     except:
         return 0
     
 def fetch_turn():
     try:
-        return turn_count
+        return session["turn_number"]
     except:
         return 0
 
 def fetch_net():
     try:
-        return net
+        return rematerialize_net()
     except:
         return 
 
 def init_net():
-    global net 
     net = Network()
+    net.save_graph("templates/pik_graph.html") 
+    dematerialize_net(net)
     return net

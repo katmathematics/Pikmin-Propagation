@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, session
 from pyvis.network import Network
-from app import app
-from app import graphs
+from main import app
+import graphs
 
 
 
@@ -11,7 +11,15 @@ def index():
     pik_pop = []
     
     if not net:
-        graphs.init_net()
+        net = graphs.init_net()
+        session["node_count"] = 0
+        session["turn_number"] = 0
+        session["pik_pop"] = ['']
+        session["active_pikmin_controller"] = []
+        session["red_count"] = 0
+        session["colored_count"] = 0
+        session["instructions_history"] = []
+        session["game_complete"] = False
         node_count = 0
         turn_number = 0
         pik_pop = ['']
@@ -84,6 +92,8 @@ def index():
                 graphs.load_wheel(int(size))
             elif init_graph_family == "complete":    
                 graphs.load_complete(int(size))
+            
+            graphs.set_pik_pop([''])
 
             node_count = graphs.fetch_size()   
         elif execute_turn:
@@ -120,6 +130,7 @@ def index():
         if pik_pop != ['']:
             for pikmin in pik_pop:
                 active_pikmin_controller.append([pikmin,"pikmin_move_selector_"+pikmin.replace(" ", "_"),"pikmin_color_selector_"+pikmin.replace(" ", "_")])
+        print(" Active Pikmin Controller ", active_pikmin_controller)
         
         
         
