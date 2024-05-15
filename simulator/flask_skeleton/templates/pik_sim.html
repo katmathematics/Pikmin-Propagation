@@ -1,6 +1,7 @@
 <html> 
   <head> 
    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/simulation_interface.css') }}">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   </head> 
 
 <div class="entire_page_with_footer"></div>
@@ -9,6 +10,15 @@
       <div class = "header" style="border-bottom: 7px solid rgb(68, 74, 81);">
          <h1 class = "header">&emsp;Pikmin Propagation Simulator</h1>
       </div>
+
+      <div class = "instructions">
+         <details>
+            <summary class="help">How to Play Pikmin Propagation</summary>
+            <p>The objective of pikmin propagation is to utilize pikmin agents to color a graph whilst minimizing the time taken to color the graph and the number of vertices colored red. The game begins by placing 1 pikmin on the graph. From here, every round, all pikmin that exist at the start of the round perform a turn consisting of two actions: move and then color. Pikmin may first choose to move to an adjacent vertex or stay on their current vertex. After moving, if the pikmin is occupying an uncolored vertex, they may choose to color a vertex either red to create an additional pikmin, or blue to color in more of the graph without increasing the total number red vertices. Pikmin are not allowed to recolor vertices that have already been colored. The game ends when the graph is fully colored.</p>
+         </details>
+      </div>
+      
+      
       
       <form method="POST">
          <div class = "initialization_menu">
@@ -22,8 +32,8 @@
                <option value="complete">Complete</option>
             </select>
             <br>
-            <label class="initialization_menu_form" for="input_size">&emsp;Select Number of Vertices:</label>
-            <input class="initialization_menu_form_black_override" id="number" type="number" name="input_size" value="1" min="1" max="30" />
+            <label class="initialization_menu_form" for="input_size">&emsp;Select Number of Vertices [1-10]:</label>
+            <input class="initialization_menu_form_black_override" id="number" type="number" name="input_size" value="1" min="1" max="10" />
             <br>
             &emsp;<input class="button-5" type="submit" name="init_graph" value="Load Graph">
          </div>
@@ -37,8 +47,8 @@
                <input class="button-5" type="submit" name="init_pik" value="Initialize Pikmin">
             </div>
             <div class = "analysis_option" style="padding:6px;">
-               <h4 class = "analysis_option">Automatic Analysis (WIP)</h4>
-               <input class="button-5" type="submit" name="run_automatic" value="Run Automatic Analysis">
+               <h4 class = "analysis_option">Automatic Analysis (Coming Soon)</h4>
+               <input class="disabled-button-5" type="submit" name="run_automatic" value="Run Automatic Analysis">
             </div>
          </div>
          {% endif %}
@@ -63,6 +73,7 @@
                </div>
             {% endif %}
          </div>
+         
          <div class="turn_input">
             {% if pikmin_agents_control != [] and not game_complete %}
             <h3 style="margin-top: 5px;">Provide Instructions</h3>
@@ -107,10 +118,11 @@
       </div>
       {% endif %}
   </body> 
-  <div class="footer">
-   Simulation tool created by Katja Mathesius
+  
+</div>
+<div class="footer">
+   Simulation tool created by Katja Mathesius.
    <br class="footer">
    Based on <i>Pikmin Propagation</i> by DJ Henson and Katja Mathesius, under the supervision of Dr. Joshua Carlson
    </div>
-</div>
 </html>
