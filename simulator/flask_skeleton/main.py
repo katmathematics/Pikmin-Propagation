@@ -5,7 +5,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 
-app.secret_key = os.environ.get('FLASK_SECRET')
+app.secret_key = "test_secret" #os.environ.get('FLASK_SECRET')
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_DOMAIN'] = '.localhost'
 
